@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="ForgetfulTasks - Simple no-login daily task tracker that helps you remember activities. Your data stays private on your device." />
+  <meta name="keywords" content="task tracker, to-do list, productivity app, daily tasks, no login task manager, forgetful tasks">
+  <meta name="author" content="ForgetfulTasks">
+  <title>ForgetfulTasks - Simple Daily Task Tracker | No Login Required</title>
+  
+  <!-- Open Graph / Social Media Meta Tags -->
+  <meta property="og:title" content="ForgetfulTasks - Simple Daily Task Tracker">
+  <meta property="og:description" content="No-login task tracker that helps you remember daily activities. Your data stays private on your device.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://yourdomain.com/forgetfultasks">
+  <meta property="og:image" content="https://yourdomain.com/images/task-tracker-preview.jpg">
+  
+  <!-- Favicon -->
+  <link rel="icon" href="favicon.ico" type="image/x-icon">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  
+  <!-- Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "ForgetfulTasks",
+    "description": "Simple no-login daily task tracker",
+    "url": "https://yourdomain.com/forgetfultasks",
+    "applicationCategory": "ProductivityApplication",
+    "operatingSystem": "Web Browser"
+  }
+  </script>
+  
+  <style>
+    :root {
+      --primary: #00a8ff;
+      --danger: #e84118;
+      --dark: #2f3640;
+      --light: #f5f6fa;
+      --success: #4cd137;
+    }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: var(--light);
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      color: var(--dark);
+      line-height: 1.6;
+    }
+    header, footer {
+      background: var(--primary);
+      color: white;
+      text-align: center;
+      padding: 1rem;
+    }
+    .container {
+      max-width: 600px;
+      margin: 1rem auto;
+      background: white;
+      padding: 1.5rem;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+      flex-grow: 1;
+    }
+    input[type="text"] {
+      width: 70%;
+      padding: 0.6rem;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 1rem;
+    }
+    .add-btn, .reset-btn {
+      background: var(--primary);
+      color: white;
+      padding: 0.6rem 1.2rem;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: background-color 0.3s;
+    }
+    .add-btn:hover {
+      background: #0097e6;
+    }
+    .reset-btn {
+      background: var(--danger);
+      margin-top: 1rem;
+    }
+    .reset-btn:hover {
+      background: #c23616;
+    }
+    ul {
+      list-style: none;
+      padding: 0;
+      margin: 1.5rem 0;
+    }
+    li.task-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.8rem 0;
+      border-bottom: 1px solid #eee;
+    }
+    .task-text {
+      flex-grow: 1;
+      margin: 0 1rem;
+    }
+    .completed {
+      text-decoration: line-through;
+      color: #aaa;
+    }
+    .ad-container {
+      text-align: center;
+      padding: 1rem;
+      background: #f8f9fa;
+      margin: 0 auto;
+      width: 100%;
+      max-width: 600px;
+      border-radius: 8px;
+    }
+    .date-display {
+      font-weight: bold;
+      margin-bottom: 1rem;
+      color: var(--dark);
+    }
+    .task-actions {
+      display: flex;
+      gap: 0.5rem;
+    }
+    .delete-btn {
+      background: none;
+      border: none;
+      color: var(--danger);
+      font-size: 1.2rem;
+      cursor: pointer;
+      padding: 0 0.5rem;
+    }
+    .task-input-container {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+    @media (max-width: 640px) {
+      .container {
+        margin: 1rem;
+        padding: 1rem;
+      }
+      input[type="text"] {
+        width: 60%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>ForgetfulTasks</h1>
+    <p>Your simple, private daily task tracker</p>
+  </header>
+
+  <div class="ad-container" id="top-ad">
+    <!-- PropellerAds Top Banner -->
+    <div id="propeller-top-ad" data-zoneid="YOUR_ZONE_ID_1"></div>
+  </div>
+
+  <main class="container">
+    <div class="date-display" id="dateDisplay"></div>
+    <div class="task-input-container">
+      <input type="text" id="newTaskInput" placeholder="Add a new task..." aria-label="New task input" />
+      <button class="add-btn" id="addTaskBtn">Add Task</button>
+    </div>
+    <ul id="taskList">
+      <li id="noTasksMessage">No tasks yet. Start by adding one above!</li>
+    </ul>
+    <button class="reset-btn" id="resetBtn">Reset All Tasks</button>
+  </main>
+
+  <div class="ad-container" id="bottom-ad">
+    <!-- PropellerAds Bottom Banner -->
+    <div id="propeller-bottom-ad" data-zoneid="YOUR_ZONE_ID_2"></div>
+  </div>
+
+  <footer>
+    <p>&copy; <span id="currentYear"></span> ForgetfulTasks. Your data stays private on your device.</p>
+  </footer>
+
+  <script>
+    // DOM Elements
+    const taskList = document.getElementById('taskList');
+    const newTaskInput = document.getElementById('newTaskInput');
+    const addTaskBtn = document.getElementById('addTaskBtn');
+    const resetBtn = document.getElementById('resetBtn');
+    const noTasksMessage = document.getElementById('noTasksMessage');
+    const dateDisplay = document.getElementById('dateDisplay');
+    const today = new Date().toISOString().split('T')[0];
+
+    // Initialize date display
+    dateDisplay.textContent = new Date().toLocaleDateString(undefined, { 
+      weekday: 'long', 
+      year: 'numeric', 
+      month: 'long', 
+      day: 'numeric' 
+    });
+    document.getElementById('currentYear').textContent = new Date().getFullYear();
+
+    // Event Listeners
+    addTaskBtn.addEventListener('click', addTask);
+    newTaskInput.addEventListener('keypress', e => e.key === 'Enter' && addTask());
+    resetBtn.addEventListener('click', resetAllTasks);
+
+    // Task Functions
+    function addTask() {
+      const text = newTaskInput.value.trim();
+      if (!text) return;
+      
+      const tasks = getTasks();
+      tasks.push({ 
+        id: Date.now(), 
+        text, 
+        completed: false,
+        createdAt: new Date().toISOString()
+      });
+      
+      saveTasks(tasks);
+      renderTasks(tasks);
+      newTaskInput.value = '';
+      newTaskInput.focus();
+      
+      // Track task addition for ads
+      if (typeof propellerAds !== 'undefined') {
+        propellerAds.trackConversion('task_added');
+      }
+    }
+
+    function getTasks() {
+      return JSON.parse(localStorage.getItem(`tasks_${today}`) || '[]');
+    }
+
+    function saveTasks(tasks) {
+      localStorage.setItem(`tasks_${today}`, JSON.stringify(tasks));
+    }
+
+    function renderTasks(tasks) {
+      taskList.innerHTML = '';
+      
+      if (tasks.length === 0) {
+        noTasksMessage.style.display = 'block';
+        taskList.appendChild(noTasksMessage);
+        return;
+      }
+      
+      noTasksMessage.style.display = 'none';
+      
+      tasks.forEach(task => {
+        const li = document.createElement('li');
+        li.className = 'task-item';
+        li.dataset.taskId = task.id;
+        
+        li.innerHTML = `
+          <input type="checkbox" id="task-${task.id}" ${task.completed ? 'checked' : ''} 
+                 aria-label="${task.completed ? 'Mark as incomplete' : 'Mark as complete'}">
+          <span class="task-text ${task.completed ? 'completed' : ''}">${task.text}</span>
+          <div class="task-actions">
+            <button class="delete-btn" onclick="deleteTask(${task.id})" aria-label="Delete task">&times;</button>
+          </div>
+        `;
+        
+        li.querySelector('input').addEventListener('change', (e) => {
+          toggleComplete(task.id, e.target.checked);
+          if (e.target.checked && typeof propellerAds !== 'undefined') {
+            propellerAds.trackConversion('task_completed');
+          }
+        });
+        
+        taskList.appendChild(li);
+      });
+    }
+
+    function toggleComplete(id, completed) {
+      const tasks = getTasks();
+      const index = tasks.findIndex(t => t.id === id);
+      if (index !== -1) {
+        tasks[index].completed = completed;
+        saveTasks(tasks);
+        renderTasks(tasks);
+      }
+    }
+
+    function deleteTask(id) {
+      const tasks = getTasks().filter(t => t.id !== id);
+      saveTasks(tasks);
+      renderTasks(tasks);
+    }
+
+    function resetAllTasks() {
+      if (confirm('Are you sure you want to clear all tasks for today?')) {
+        localStorage.removeItem(`tasks_${today}`);
+        renderTasks([]);
+      }
+    }
+
+    // Initial render
+    renderTasks(getTasks());
+
+    // Load PropellerAds script
+    function loadPropellerAds() {
+      const script = document.createElement('script');
+      script.src = 'https://ads.propellerads.com/v5/loader.js';
+      script.async = true;
+      script.onload = function() {
+        // Initialize ads after script loads
+        propellerAds = new PropellerAds();
+        propellerAds.init({
+          zones: {
+            'propeller-top-ad': 'YOUR_ZONE_ID_1',
+            'propeller-bottom-ad': 'YOUR_ZONE_ID_2'
+          },
+          onAdLoad: function(zoneId) {
+            console.log('Ad loaded in zone:', zoneId);
+          },
+          onAdError: function(zoneId, error) {
+            console.log('Ad error in zone:', zoneId, error);
+          }
+        });
+      };
+      document.head.appendChild(script);
+    }
+
+    // Initialize when DOM is ready
+    document.addEventListener('DOMContentLoaded', function() {
+      loadPropellerAds();
+    });
+  </script>
+</body>
+</html>

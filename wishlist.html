@@ -1,0 +1,1040 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Create and manage your personal wishlist. Track items you want, set priorities, and share with friends.">
+    <meta name="keywords" content="wishlist, gift list, shopping list, present ideas, gift registry">
+    <meta name="robots" content="index, follow">
+    <meta property="og:title" content="Wishlist Manager - Create & Share Your Wishlist">
+    <meta property="og:description" content="Organize and share your wishlist with friends and family.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://yourdomain.com/wishlist">
+    <meta name="twitter:card" content="summary_large_image">
+    
+    <title>Wishlist Manager - Create & Share Your Wishlist</title>
+    
+    <link rel="canonical" href="https://yourdomain.com/wishlist">
+    
+    <style>
+        /* Modern, clean styling */
+        :root {
+            --primary: #4a6bdf;
+            --primary-light: #6d8aff;
+            --primary-dark: #2a4fc7;
+            --secondary: #ff7043;
+            --secondary-light: #ff8a65;
+            --secondary-dark: #e64a19;
+            --background: #f8f9fa;
+            --surface: #ffffff;
+            --error: #d32f2f;
+            --text-primary: #212121;
+            --text-secondary: #757575;
+            --divider: #e0e0e0;
+            --success: #388e3c;
+            
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.12);
+            --shadow-md: 0 4px 6px rgba(0,0,0,0.16);
+            --shadow-lg: 0 10px 20px rgba(0,0,0,0.19);
+            
+            --radius-sm: 4px;
+            --radius-md: 8px;
+            --radius-lg: 12px;
+            
+            --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--text-primary);
+            background-color: var(--background);
+            padding: 0;
+        }
+
+        /* Header */
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            padding: 2rem 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .tagline {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        /* Ad container styles */
+        .ad-container {
+            background: white;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-sm);
+            text-align: center;
+            overflow: hidden;
+            min-height: 90px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Wishlist card */
+        .wishlist-card {
+            background: var(--surface);
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-md);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        /* Form styles */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--divider);
+            border-radius: var(--radius-sm);
+            font-family: inherit;
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(74, 107, 223, 0.2);
+        }
+
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.75rem 1.5rem;
+            border-radius: var(--radius-md);
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            border: none;
+            font-size: 1rem;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn-secondary {
+            background: var(--secondary);
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: var(--secondary-dark);
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--primary);
+            color: var(--primary);
+        }
+
+        .btn-outline:hover {
+            background: rgba(74, 107, 223, 0.1);
+        }
+
+        /* Wishlist items */
+        .wishlist-items {
+            margin-top: 2rem;
+        }
+
+        .wishlist-item {
+            display: flex;
+            padding: 1rem;
+            border: 1px solid var(--divider);
+            border-radius: var(--radius-md);
+            margin-bottom: 1rem;
+            transition: var(--transition);
+            background: var(--surface);
+            align-items: flex-start;
+        }
+
+        .wishlist-item:hover {
+            box-shadow: var(--shadow-sm);
+        }
+
+        .wishlist-item.purchased {
+            background-color: rgba(56, 142, 60, 0.05);
+            border-left: 4px solid var(--success);
+        }
+
+        .item-checkbox {
+            margin-right: 1rem;
+            margin-top: 0.3rem;
+        }
+
+        .item-content {
+            flex: 1;
+        }
+
+        .item-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+        }
+
+        .item-title {
+            font-weight: 500;
+            font-size: 1.1rem;
+        }
+
+        .item-price {
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .item-description {
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .item-priority {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            border-radius: var(--radius-sm);
+            font-size: 0.8rem;
+            font-weight: 500;
+            background: var(--background);
+            color: var(--text-secondary);
+        }
+
+        .priority-high {
+            background: #ffebee;
+            color: var(--error);
+        }
+
+        .priority-medium {
+            background: #fff8e1;
+            color: #ff8f00;
+        }
+
+        .priority-low {
+            background: #e8f5e9;
+            color: var(--success);
+        }
+
+        .item-actions {
+            display: flex;
+            gap: 0.5rem;
+            margin-left: 1rem;
+        }
+
+        .action-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--text-secondary);
+            transition: var(--transition);
+            padding: 0.3rem;
+            border-radius: 50%;
+        }
+
+        .action-btn:hover {
+            background: rgba(0,0,0,0.05);
+            color: var(--text-primary);
+        }
+
+        /* Filters and stats */
+        .wishlist-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .filter-group {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .stats {
+            display: flex;
+            gap: 1rem;
+            font-weight: 500;
+        }
+
+        .stat {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .stat-value {
+            font-size: 1.2rem;
+            color: var(--primary);
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        /* Empty state */
+        .empty-state {
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-secondary);
+        }
+
+        .empty-state img {
+            max-width: 200px;
+            margin-bottom: 1rem;
+            opacity: 0.7;
+        }
+
+        /* Settings panel */
+        .settings-panel {
+            background: var(--surface);
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-md);
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .settings-title {
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            
+            .wishlist-item {
+                flex-direction: column;
+            }
+            
+            .item-actions {
+                margin-left: 0;
+                margin-top: 1rem;
+                justify-content: flex-end;
+            }
+            
+            .wishlist-controls {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+
+        /* Save notification */
+        .save-notification {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--success);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-md);
+            transform: translateY(100px);
+            opacity: 0;
+            transition: var(--transition);
+            z-index: 1000;
+        }
+
+        .save-notification.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    </style>
+    
+    <!-- Schema.org markup for Google -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Wishlist Manager",
+      "url": "https://yourdomain.com/wishlist",
+      "description": "Create and manage your personal wishlist. Track items you want, set priorities, and share with friends.",
+      "applicationCategory": "Productivity",
+      "operatingSystem": "Web Browser"
+    }
+    </script>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <h1>Wishlist Manager</h1>
+            <p class="tagline">Create, organize and share your wishlist</p>
+        </div>
+    </header>
+    
+    <main class="container">
+        <!-- Top Ad Placement -->
+        <div class="ad-container" id="propeller-top-ad" data-zoneid="YOUR_TOP_ZONE_WISHLIST">
+            <!-- Ad will be loaded here -->
+        </div>
+        
+        <article class="settings-panel">
+            <h2 class="settings-title">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="3"></circle>
+                    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+                </svg>
+                Settings
+            </h2>
+            <div class="form-group">
+                <label for="currency">Currency</label>
+                <select id="currency">
+                    <option value="₹">Indian Rupee (₹)</option>
+                    <option value="$">US Dollar ($)</option>
+                    <option value="€">Euro (€)</option>
+                    <option value="£">British Pound (£)</option>
+                    <option value="¥">Japanese Yen (¥)</option>
+                    <option value="₽">Russian Ruble (₽)</option>
+                    <option value="₩">South Korean Won (₩)</option>
+                    <option value="₪">Israeli Shekel (₪)</option>
+                    <option value="R$">Brazilian Real (R$)</option>
+                </select>
+            </div>
+        </article>
+        
+        <section class="wishlist-card">
+            <h2>My Wishlist</h2>
+            <p>Add items you'd love to receive</p>
+            
+            <form id="wishlistForm">
+                <div class="form-group">
+                    <label for="itemName">Item Name</label>
+                    <input type="text" id="itemName" placeholder="e.g. Wireless Headphones" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="itemDescription">Description (optional)</label>
+                    <textarea id="itemDescription" placeholder="Any details like color, brand, or specific model"></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="itemPrice">Price (optional)</label>
+                    <input type="number" id="itemPrice" placeholder="e.g. 5999" step="1">
+                </div>
+                
+                <div class="form-group">
+                    <label for="itemPriority">Priority</label>
+                    <select id="itemPriority">
+                        <option value="low">Low</option>
+                        <option value="medium" selected>Medium</option>
+                        <option value="high">High</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="itemLink">Link (optional)</label>
+                    <input type="url" id="itemLink" placeholder="https://example.com/product">
+                </div>
+                
+                <div class="btn-group">
+                    <button type="submit" class="btn btn-primary">Add to Wishlist</button>
+                    <button type="button" class="btn btn-outline" id="saveDraft">Save Draft</button>
+                </div>
+            </form>
+        </section>
+        
+        <!-- Middle Ad Placement -->
+        <div class="ad-container" id="propeller-middle-ad" data-zoneid="YOUR_MIDDLE_ZONE_WISHLIST">
+            <!-- Ad will be loaded here -->
+        </div>
+        
+        <section class="wishlist-card" aria-labelledby="wishlist-items-heading">
+            <h2 id="wishlist-items-heading">Wishlist Items</h2>
+            
+            <div class="wishlist-controls">
+                <div class="filter-group">
+                    <button class="btn btn-outline" id="filterAll">All</button>
+                    <button class="btn btn-outline" id="filterAvailable">Available</button>
+                    <button class="btn btn-outline" id="filterPurchased">Purchased</button>
+                    <select class="btn btn-outline" id="sortBy">
+                        <option value="priority">Sort by Priority</option>
+                        <option value="price-high">Price: High to Low</option>
+                        <option value="price-low">Price: Low to High</option>
+                        <option value="newest">Newest First</option>
+                        <option value="oldest">Oldest First</option>
+                    </select>
+                </div>
+                
+                <div class="stats">
+                    <div class="stat">
+                        <span class="stat-value" id="totalItems">0</span>
+                        <span class="stat-label">Items</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-value" id="totalCost">₹0</span>
+                        <span class="stat-label">Total</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-value" id="remainingCost">₹0</span>
+                        <span class="stat-label">Remaining</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="wishlist-items" id="wishlistItems">
+                <!-- Items will be added here dynamically -->
+                <div class="empty-state">
+                    <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiM3NTc1NzUiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBjbGFzcz0ibHVjaWRlIGx1Y2lkZS1naWZ0Ij48cGF0aCBkPSJNMyA4aDE4djEzSDB6Ii8+PHBhdGggZD0ibTMgMTQgNy43IDcgNy43LTciLz48cGF0aCBkPSJNMTIgMTFWNy4yYzAtLjcuMy0xLjMuNy0xLjhsMS4xLTEuNGMuNC0uNSAxLjEtLjggMS44LS44aDEuNSIvPjxwYXRoIGQ9Ik0xMiAxMVY3LjJjMC0uNy0uMy0xLjMtLjctMS44bC0xLjEtMS40Yy0uNC0uNS0xLjEtLjgtMS44LS44SDguNiIvPjwvc3ZnPg==" alt="Empty wishlist icon">
+                    <p>Your wishlist is empty</p>
+                    <p>Add some items you'd like to receive!</p>
+                </div>
+            </div>
+            
+            <div class="wishlist-controls">
+                <button class="btn btn-secondary" id="shareList">Share Wishlist</button>
+                <button class="btn btn-outline" id="exportList">Export List</button>
+                <button class="btn btn-outline" id="clearList">Clear All</button>
+                <button class="btn btn-outline" id="saveList">Save List</button>
+            </div>
+        </section>
+        
+        <!-- Bottom Ad Placement -->
+        <div class="ad-container" id="propeller-bottom-ad" data-zoneid="YOUR_BOTTOM_ZONE_WISHLIST">
+            <!-- Ad will be loaded here -->
+        </div>
+    </main>
+
+    <!-- Save notification -->
+    <div class="save-notification" id="saveNotification">
+        Wishlist saved successfully!
+    </div>
+
+    <script>
+        // ===== Wishlist Functionality =====
+        let wishlist = JSON.parse(localStorage.getItem('wishlistManager')) || [];
+        let formDraft = JSON.parse(localStorage.getItem('wishlistDraft')) || null;
+        let currencySymbol = localStorage.getItem('wishlistCurrency') || '₹';
+        
+        // DOM Elements
+        const wishlistForm = document.getElementById('wishlistForm');
+        const wishlistItems = document.getElementById('wishlistItems');
+        const totalItemsEl = document.getElementById('totalItems');
+        const totalCostEl = document.getElementById('totalCost');
+        const remainingCostEl = document.getElementById('remainingCost');
+        const saveNotification = document.getElementById('saveNotification');
+        const currencySelect = document.getElementById('currency');
+        
+        // Form elements
+        const itemName = document.getElementById('itemName');
+        const itemDescription = document.getElementById('itemDescription');
+        const itemPrice = document.getElementById('itemPrice');
+        const itemPriority = document.getElementById('itemPriority');
+        const itemLink = document.getElementById('itemLink');
+        
+        // Filter buttons
+        const filterAll = document.getElementById('filterAll');
+        const filterAvailable = document.getElementById('filterAvailable');
+        const filterPurchased = document.getElementById('filterPurchased');
+        const sortBy = document.getElementById('sortBy');
+        
+        // Action buttons
+        const shareList = document.getElementById('shareList');
+        const exportList = document.getElementById('exportList');
+        const clearList = document.getElementById('clearList');
+        const saveList = document.getElementById('saveList');
+        const saveDraft = document.getElementById('saveDraft');
+        
+        // Current filter state
+        let currentFilter = 'all';
+        let currentSort = 'priority';
+        
+        // Initialize the app
+        function init() {
+            // Set currency from localStorage
+            currencySelect.value = currencySymbol;
+            
+            // Load draft if exists
+            loadDraft();
+            
+            // Render initial wishlist
+            renderWishlist();
+            
+            // Update statistics
+            updateStats();
+            
+            // Setup event listeners
+            setupEventListeners();
+            
+            // Initialize ads
+            initializeAds();
+        }
+        
+        // Initialize propeller ads
+        function initializeAds() {
+            // Main banner ads
+            if (typeof propellerAds !== 'undefined') {
+                propellerAds.init({
+                    zones: {
+                        'propeller-top-ad': 'YOUR_TOP_ZONE_WISHLIST',
+                        'propeller-middle-ad': 'YOUR_MIDDLE_ZONE_WISHLIST', 
+                        'propeller-bottom-ad': 'YOUR_BOTTOM_ZONE_WISHLIST'
+                    }
+                });
+            }
+            
+            // Push notifications
+            const pushScript = document.createElement('script');
+            pushScript.src = 'https://push.propellerads.com/1?z=YOUR_PUSH_ZONE_WISHLIST';
+            document.body.appendChild(pushScript);
+        }
+        
+        // Load draft if exists
+        function loadDraft() {
+            if (formDraft) {
+                itemName.value = formDraft.name || '';
+                itemDescription.value = formDraft.description || '';
+                itemPrice.value = formDraft.price || '';
+                itemPriority.value = formDraft.priority || 'medium';
+                itemLink.value = formDraft.link || '';
+            }
+        }
+        
+        // Save current form as draft
+        function saveFormDraft() {
+            formDraft = {
+                name: itemName.value.trim(),
+                description: itemDescription.value.trim(),
+                price: itemPrice.value,
+                priority: itemPriority.value,
+                link: itemLink.value.trim()
+            };
+            
+            localStorage.setItem('wishlistDraft', JSON.stringify(formDraft));
+            showSaveNotification('Draft saved!');
+        }
+        
+        // Clear draft
+        function clearDraft() {
+            formDraft = null;
+            localStorage.removeItem('wishlistDraft');
+        }
+        
+        // Show save notification
+        function showSaveNotification(message) {
+            saveNotification.textContent = message;
+            saveNotification.classList.add('show');
+            
+            setTimeout(() => {
+                saveNotification.classList.remove('show');
+            }, 3000);
+        }
+        
+        // Set up event listeners
+        function setupEventListeners() {
+            // Form submission
+            wishlistForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                addItem();
+                clearDraft();
+            });
+            
+            // Save draft button
+            saveDraft.addEventListener('click', saveFormDraft);
+            
+            // Filter buttons
+            filterAll.addEventListener('click', () => {
+                currentFilter = 'all';
+                updateActiveFilter();
+                renderWishlist();
+            });
+            
+            filterAvailable.addEventListener('click', () => {
+                currentFilter = 'available';
+                updateActiveFilter();
+                renderWishlist();
+            });
+            
+            filterPurchased.addEventListener('click', () => {
+                currentFilter = 'purchased';
+                updateActiveFilter();
+                renderWishlist();
+            });
+            
+            // Sort dropdown
+            sortBy.addEventListener('change', () => {
+                currentSort = sortBy.value;
+                renderWishlist();
+            });
+            
+            // Currency change
+            currencySelect.addEventListener('change', () => {
+                currencySymbol = currencySelect.value;
+                localStorage.setItem('wishlistCurrency', currencySymbol);
+                renderWishlist();
+                updateStats();
+            });
+            
+            // Action buttons
+            shareList.addEventListener('click', shareWishlist);
+            exportList.addEventListener('click', exportWishlist);
+            clearList.addEventListener('click', clearWishlist);
+            saveList.addEventListener('click', () => {
+                saveWishlist();
+                showSaveNotification('Wishlist saved!');
+            });
+            
+            // Auto-save draft when leaving page
+            window.addEventListener('beforeunload', () => {
+                if (itemName.value.trim() !== '') {
+                    saveFormDraft();
+                }
+            });
+        }
+        
+        // Update active filter button styles
+        function updateActiveFilter() {
+            filterAll.classList.remove('btn-primary');
+            filterAvailable.classList.remove('btn-primary');
+            filterPurchased.classList.remove('btn-primary');
+            
+            filterAll.classList.add('btn-outline');
+            filterAvailable.classList.add('btn-outline');
+            filterPurchased.classList.add('btn-outline');
+            
+            if (currentFilter === 'all') {
+                filterAll.classList.remove('btn-outline');
+                filterAll.classList.add('btn-primary');
+            } else if (currentFilter === 'available') {
+                filterAvailable.classList.remove('btn-outline');
+                filterAvailable.classList.add('btn-primary');
+            } else {
+                filterPurchased.classList.remove('btn-outline');
+                filterPurchased.classList.add('btn-primary');
+            }
+        }
+        
+        // Add a new item to the wishlist
+        function addItem() {
+            const newItem = {
+                id: Date.now(),
+                name: itemName.value.trim(),
+                description: itemDescription.value.trim(),
+                price: itemPrice.value ? parseInt(itemPrice.value) : null,
+                priority: itemPriority.value,
+                link: itemLink.value.trim(),
+                purchased: false,
+                dateAdded: new Date().toISOString()
+            };
+            
+            wishlist.unshift(newItem);
+            saveWishlist();
+            renderWishlist();
+            updateStats();
+            
+            // Reset form
+            wishlistForm.reset();
+            itemPriority.value = 'medium'; // Reset to default
+            itemName.focus();
+        }
+        
+        // Render the wishlist
+        function renderWishlist() {
+            // Filter items
+            let filteredItems = wishlist.filter(item => {
+                if (currentFilter === 'all') return true;
+                if (currentFilter === 'available') return !item.purchased;
+                return item.purchased;
+            });
+            
+            // Sort items
+            filteredItems = sortItems(filteredItems);
+            
+            // Clear current items
+            wishlistItems.innerHTML = '';
+            
+            // Show empty state if no items
+            if (filteredItems.length === 0) {
+                const emptyState = document.createElement('div');
+                emptyState.className = 'empty-state';
+                emptyState.innerHTML = `
+                    <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiM3NTc1NzUiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBjbGFzcz0ibHVjaWRlIGx1Y2lkZS1naWZ0Ij48cGF0aCBkPSJNMyA4aDE4djEzSDB6Ii8+PHBhdGggZD0ibTMgMTQgNy43IDcgNy43LTciLz48cGF0aCBkPSJNMTIgMTFWNy4yYzAtLjcuMy0xLjMuNy0xLjhsMS4xLTEuNGMuNC0uNSAxLjEtLjggMS44LS44aDEuNSIvPjxwYXRoIGQ9Ik0xMiAxMVY3LjJjMC0uNy0uMy0xLjMtLjctMS44bC0xLjEtMS40Yy0uNC0uNS0xLjEtLjgtMS44LS44SDguNiIvPjwvc3ZnPg==" alt="Empty wishlist">
+                    <p>No items match your current filter</p>
+                `;
+                wishlistItems.appendChild(emptyState);
+                return;
+            }
+            
+            // Add each item to the DOM
+            filteredItems.forEach(item => {
+                const itemEl = document.createElement('article');
+                itemEl.className = `wishlist-item ${item.purchased ? 'purchased' : ''}`;
+                itemEl.dataset.id = item.id;
+                
+                const priorityClass = `priority-${item.priority}`;
+                const priceText = item.price ? `${currencySymbol}${item.price.toLocaleString()}` : 'Price not set';
+                
+                itemEl.innerHTML = `
+                    <div class="item-checkbox">
+                        <input type="checkbox" id="purchased-${item.id}" ${item.purchased ? 'checked' : ''} aria-label="Mark as purchased">
+                    </div>
+                    <div class="item-content">
+                        <div class="item-header">
+                            <span class="item-title">${item.name}</span>
+                            <span class="item-price">${priceText}</span>
+                        </div>
+                        ${item.description ? `<p class="item-description">${item.description}</p>` : ''}
+                        <span class="item-priority ${priorityClass}">${item.priority.toUpperCase()}</span>
+                        ${item.link ? `<p class="item-link"><small><a href="${item.link}" target="_blank" rel="noopener noreferrer">View product</a></small></p>` : ''}
+                    </div>
+                    <div class="item-actions">
+                        <button class="action-btn edit-btn" title="Edit">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                            </svg>
+                        </button>
+                        <button class="action-btn delete-btn" title="Delete">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="3 6 5 6 21 6"></polyline>
+                                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                                <line x1="10" y1="11" x2="10" y2="17"></line>
+                                <line x1="14" y1="11" x2="14" y2="17"></line>
+                            </svg>
+                        </button>
+                    </div>
+                `;
+                
+                // Add event listeners to the buttons
+                const checkbox = itemEl.querySelector(`#purchased-${item.id}`);
+                checkbox.addEventListener('change', () => togglePurchased(item.id));
+                
+                const editBtn = itemEl.querySelector('.edit-btn');
+                editBtn.addEventListener('click', () => editItem(item.id));
+                
+                const deleteBtn = itemEl.querySelector('.delete-btn');
+                deleteBtn.addEventListener('click', () => deleteItem(item.id));
+                
+                wishlistItems.appendChild(itemEl);
+            });
+        }
+        
+        // Sort items based on current sort option
+        function sortItems(items) {
+            switch(currentSort) {
+                case 'price-high':
+                    return [...items].sort((a, b) => (b.price || 0) - (a.price || 0));
+                case 'price-low':
+                    return [...items].sort((a, b) => (a.price || 0) - (b.price || 0));
+                case 'newest':
+                    return [...items].sort((a, b) => new Date(b.dateAdded) - new Date(a.dateAdded));
+                case 'oldest':
+                    return [...items].sort((a, b) => new Date(a.dateAdded) - new Date(b.dateAdded));
+                case 'priority':
+                default:
+                    const priorityOrder = { high: 3, medium: 2, low: 1 };
+                    return [...items].sort((a, b) => priorityOrder[b.priority] - priorityOrder[a.priority]);
+            }
+        }
+        
+        // Toggle purchased status
+        function togglePurchased(id) {
+            const itemIndex = wishlist.findIndex(item => item.id === id);
+            if (itemIndex !== -1) {
+                wishlist[itemIndex].purchased = !wishlist[itemIndex].purchased;
+                saveWishlist();
+                updateStats();
+                
+                // Re-render if we're filtering by purchased status
+                if (currentFilter !== 'all') {
+                    renderWishlist();
+                }
+            }
+        }
+        
+        // Edit an item
+        function editItem(id) {
+            const item = wishlist.find(item => item.id === id);
+            if (!item) return;
+            
+            itemName.value = item.name;
+            itemDescription.value = item.description || '';
+            itemPrice.value = item.price || '';
+            itemPriority.value = item.priority;
+            itemLink.value = item.link || '';
+            
+            // Remove the item being edited
+            wishlist = wishlist.filter(i => i.id !== id);
+            saveWishlist();
+            renderWishlist();
+            updateStats();
+            
+            // Scroll to form
+            itemName.focus();
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        }
+        
+        // Delete an item
+        function deleteItem(id) {
+            if (confirm('Are you sure you want to remove this item from your wishlist?')) {
+                wishlist = wishlist.filter(item => item.id !== id);
+                saveWishlist();
+                renderWishlist();
+                updateStats();
+            }
+        }
+        
+        // Share the wishlist
+        function shareWishlist() {
+            // Create a text version of the wishlist
+            let text = "My Wishlist:\n\n";
+            
+            wishlist.forEach((item, index) => {
+                text += `${index + 1}. ${item.name}`;
+                if (item.price) text += ` - ${currencySymbol}${item.price.toLocaleString()}`;
+                if (item.priority !== 'medium') text += ` (${item.priority} priority)`;
+                if (item.link) text += `\n${item.link}`;
+                if (item.description) text += `\n${item.description}`;
+                text += `\n${item.purchased ? '✅ Purchased' : '🛍️ Available'}\n\n`;
+            });
+            
+            // Calculate totals
+            const totalCost = wishlist.reduce((sum, item) => sum + (item.price || 0), 0);
+            const remainingCost = wishlist.reduce((sum, item) => sum + (item.purchased ? 0 : (item.price || 0)), 0);
+            
+            text += `\nTotal items: ${wishlist.length}\n`;
+            text += `Total cost: ${currencySymbol}${totalCost.toLocaleString()}\n`;
+            text += `Remaining: ${currencySymbol}${remainingCost.toLocaleString()}\n`;
+            
+            // Use Web Share API if available
+            if (navigator.share) {
+                navigator.share({
+                    title: 'My Wishlist',
+                    text: text,
+                    url: window.location.href
+                }).catch(err => {
+                    console.log('Error sharing:', err);
+                    fallbackShare(text);
+                });
+            } else {
+                fallbackShare(text);
+            }
+        }
+        
+        // Fallback for browsers without Web Share API
+        function fallbackShare(text) {
+            // Copy to clipboard
+            navigator.clipboard.writeText(text).then(() => {
+                alert('Wishlist copied to clipboard! You can now paste it to share.');
+            }).catch(err => {
+                console.error('Failed to copy:', err);
+                alert('Could not share automatically. Here is your wishlist:\n\n' + text);
+            });
+        }
+        
+        // Export wishlist as JSON
+        function exportWishlist() {
+            const data = {
+                wishlist: wishlist,
+                generatedOn: new Date().toISOString(),
+                totals: {
+                    items: wishlist.length,
+                    totalCost: wishlist.reduce((sum, item) => sum + (item.price || 0), 0),
+                    remainingCost: wishlist.reduce((sum, item) => sum + (item.purchased ? 0 : (item.price || 0)), 0)
+                },
+                currency: currencySymbol
+            };
+            
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'my-wishlist.json';
+            a.click();
+            
+            URL.revokeObjectURL(url);
+        }
+        
+        // Clear the entire wishlist
+        function clearWishlist() {
+            if (confirm('Are you sure you want to clear your entire wishlist? This cannot be undone.')) {
+                wishlist = [];
+                saveWishlist();
+                renderWishlist();
+                updateStats();
+            }
+        }
+        
+        // Update the statistics
+        function updateStats() {
+            const totalItems = wishlist.length;
+            const totalCost = wishlist.reduce((sum, item) => sum + (item.price || 0), 0);
+            const remainingCost = wishlist.reduce((sum, item) => sum + (item.purchased ? 0 : (item.price || 0)), 0);
+            
+            totalItemsEl.textContent = totalItems;
+            totalCostEl.textContent = `${currencySymbol}${totalCost.toLocaleString()}`;
+            remainingCostEl.textContent = `${currencySymbol}${remainingCost.toLocaleString()}`;
+        }
+        
+        // Save wishlist to localStorage
+        function saveWishlist() {
+            localStorage.setItem('wishlistManager', JSON.stringify(wishlist));
+        }
+        
+        // Initialize the app
+        init();
+    </script>
+</body>
+</html>

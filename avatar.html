@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- SEO Meta Tags -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create AI Avatar Videos | Upload & Motion Capture Tool</title>
+    <meta name="description" content="Create animated avatars by uploading assets or recording yourself. Generate custom avatar videos with lip-sync.">
+    <meta name="keywords" content="AI avatar, video creator, upload avatar, motion capture, lip sync">
+    <meta property="og:title" content="AI Avatar Video Creator with Upload System">
+    <meta property="og:description" content="Upload images or record yourself to create animated avatar videos.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://yourdomain.com/avatar-maker">
+    <meta property="og:image" content="https://yourdomain.com/preview.jpg">
+    <link rel="canonical" href="https://yourdomain.com/avatar-maker">
+    
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "AI Avatar Video Creator",
+      "url": "https://yourdomain.com",
+      "description": "Create avatar videos by uploading assets or recording movements."
+    }
+    </script>
+    
+    <style>
+        :root {
+            --primary: #4361ee;
+            --secondary: #3f37c9;
+            --accent: #f72585;
+            --light: #f8f9fa;
+            --dark: #212529;
+        }
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            line-height: 1.6;
+            color: var(--dark);
+            background: var(--light);
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        header {
+            text-align: center;
+            padding: 2rem 0;
+        }
+        h1 {
+            color: var(--primary);
+            font-size: 2.5rem;
+        }
+        .ad-space {
+            background: #f1f3f5;
+            border: 1px dashed #adb5bd;
+            padding: 15px;
+            text-align: center;
+            margin: 25px 0;
+            border-radius: 8px;
+        }
+        .creation-methods {
+            display: flex;
+            gap: 20px;
+            margin: 30px 0;
+        }
+        .method-card {
+            flex: 1;
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .upload-area {
+            border: 2px dashed #adb5bd;
+            padding: 30px;
+            text-align: center;
+            margin: 15px 0;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .upload-area:hover {
+            border-color: var(--primary);
+            background: #f8f9fa;
+        }
+        .preview {
+            max-width: 100%;
+            max-height: 200px;
+            margin-top: 15px;
+            display: none;
+        }
+        video, canvas {
+            width: 100%;
+            border-radius: 8px;
+            background: #000;
+        }
+        .btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1rem;
+            margin: 10px 5px;
+            transition: all 0.3s;
+        }
+        .btn:hover {
+            background: var(--secondary);
+        }
+        .btn-accent {
+            background: var(--accent);
+        }
+        .btn-accent:hover {
+            background: #d9048e;
+        }
+        .hidden {
+            display: none;
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <!-- Top Ad Space -->
+    <div class="ad-space">
+        <p>Advertisement</p>
+        <div id="monetag-top"></div>
+    </div>
+
+    <div class="container">
+        <header>
+            <h1>AI Avatar Video Creator</h1>
+            <p>Create animated avatars by uploading assets or recording yourself</p>
+        </header>
+
+        <!-- Creation Method Tabs -->
+        <div class="method-tabs">
+            <button class="btn tab-btn active" data-tab="upload">Upload Assets</button>
+            <button class="btn tab-btn" data-tab="record">Record Movements</button>
+        </div>
+
+        <!-- Upload System -->
+        <div id="upload" class="tab-content active">
+            <div class="upload-grid">
+                <div class="method-card">
+                    <h2>Upload Avatar Image</h2>
+                    <div class="upload-area" id="avatarUpload">
+                        <p>Click to upload avatar image</p>
+                        <p><small>PNG with transparent background recommended</small></p>
+                        <img id="avatarPreview" class="preview">
+                    </div>
+                    <input type="file" id="avatarInput" accept="image/*" class="hidden">
+                </div>
+                
+                <div class="method-card">
+                    <h2>Upload Background</h2>
+                    <div class="upload-area" id="bgUpload">
+                        <p>Click to upload background</p>
+                        <p><small>JPG/PNG (1920x1080 ideal)</small></p>
+                        <img id="bgPreview" class="preview">
+                    </div>
+                    <input type="file" id="bgInput" accept="image/*" class="hidden">
+                </div>
+                
+                <div class="method-card">
+                    <h2>Upload Script</h2>
+                    <textarea id="scriptText" placeholder="Paste your script here..." rows="5"></textarea>
+                    <div class="upload-area" id="scriptUpload">
+                        <p>Or upload text file (TXT, DOCX, PDF)</p>
+                        <input type="file" id="scriptInput" accept=".txt,.docx,.pdf" class="hidden">
+                    </div>
+                </div>
+                
+                <div class="method-card">
+                    <h2>Voice Options</h2>
+                    <div class="voice-options">
+                        <label><input type="radio" name="voice" value="male" checked> Male Voice</label>
+                        <label><input type="radio" name="voice" value="female"> Female Voice</label>
+                        <label><input type="radio" name="voice" value="custom"> Use My Voice</label>
+                    </div>
+                    <div id="voiceUploadArea" class="hidden">
+                        <div class="upload-area" id="voiceUpload">
+                            <p>Record or upload voice sample</p>
+                            <audio id="voicePreview" controls class="preview"></audio>
+                        </div>
+                        <input type="file" id="voiceInput" accept="audio/*" class="hidden">
+                    </div>
+                </div>
+            </div>
+            <button id="generateFromUpload" class="btn btn-accent">Generate Avatar Video</button>
+        </div>
+
+        <!-- Motion Capture System -->
+        <div id="record" class="tab-content">
+            <div class="method-card">
+                <h2>Record Your Movements</h2>
+                <video id="webcam" autoplay playsinline class="hidden"></video>
+                <canvas id="capture" class="hidden"></canvas>
+                <div class="controls">
+                    <button id="startBtn" class="btn">Enable Camera</button>
+                    <button id="recordBtn" class="btn hidden">Start Recording</button>
+                    <button id="stopBtn" class="btn btn-accent hidden">Generate Video</button>
+                </div>
+            </div>
+            <div class="method-card">
+                <h2>Avatar Preview</h2>
+                <canvas id="avatarCanvas"></canvas>
+                <div id="resultControls" class="hidden">
+                    <button id="downloadBtn" class="btn">Download Video</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Middle Ad Space -->
+        <div class="ad-space">
+            <p>Advertisement</p>
+            <div id="monetag-mid"></div>
+        </div>
+    </div>
+
+    <!-- Bottom Ad Space -->
+    <div class="ad-space">
+        <p>Advertisement</p>
+        <div id="monetag-bottom"></div>
+    </div>
+
+    <script>
+        // Monetag Ad Script
+        const loadAds = () => {
+            const script = document.createElement('script');
+            script.src = 'https://cdn.monetag.com/tag.min.js';
+            script.dataset.id = 'YOUR_MONETAG_ID';
+            document.body.appendChild(script);
+        };
+
+        // Tab System
+        const tabBtns = document.querySelectorAll('.tab-btn');
+        tabBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                tabBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                document.querySelectorAll('.tab-content').forEach(content => {
+                    content.classList.remove('active');
+                });
+                document.getElementById(btn.dataset.tab).classList.add('active');
+            });
+        });
+
+        // Upload System
+        const avatarInput = document.getElementById('avatarInput');
+        const avatarPreview = document.getElementById('avatarPreview');
+        const bgInput = document.getElementById('bgInput');
+        const bgPreview = document.getElementById('bgPreview');
+        const scriptInput = document.getElementById('scriptInput');
+        const voiceInput = document.getElementById('voiceInput');
+        const voicePreview = document.getElementById('voicePreview');
+        const voiceUploadArea = document.getElementById('voiceUploadArea');
+
+        // Handle avatar upload
+        document.getElementById('avatarUpload').addEventListener('click', () => avatarInput.click());
+        avatarInput.addEventListener('change', (e) => {
+            if (e.target.files[0]) {
+                avatarPreview.src = URL.createObjectURL(e.target.files[0]);
+                avatarPreview.style.display = 'block';
+            }
+        });
+
+        // Handle background upload
+        document.getElementById('bgUpload').addEventListener('click', () => bgInput.click());
+        bgInput.addEventListener('change', (e) => {
+            if (e.target.files[0]) {
+                bgPreview.src = URL.createObjectURL(e.target.files[0]);
+                bgPreview.style.display = 'block';
+            }
+        });
+
+        // Handle script upload
+        document.getElementById('scriptUpload').addEventListener('click', () => scriptInput.click());
+        scriptInput.addEventListener('change', async (e) => {
+            if (e.target.files[0]) {
+                const file = e.target.files[0];
+                let text = '';
+                
+                if (file.type === 'text/plain' || file.name.endsWith('.txt')) {
+                    text = await file.text();
+                } else if (file.name.endsWith('.pdf')) {
+                    // PDF text extraction would go here
+                    text = "PDF text extraction would be implemented here";
+                } else if (file.name.endsWith('.docx')) {
+                    // DOCX text extraction would go here
+                    text = "DOCX text extraction would be implemented here";
+                }
+                
+                document.getElementById('scriptText').value = text;
+            }
+        });
+
+        // Handle voice selection
+        document.querySelectorAll('input[name="voice"]').forEach(radio => {
+            radio.addEventListener('change', (e) => {
+                if (e.target.value === 'custom') {
+                    voiceUploadArea.classList.remove('hidden');
+                } else {
+                    voiceUploadArea.classList.add('hidden');
+                }
+            });
+        });
+
+        // Handle voice upload
+        document.getElementById('voiceUpload').addEventListener('click', () => voiceInput.click());
+        voiceInput.addEventListener('change', (e) => {
+            if (e.target.files[0]) {
+                voicePreview.src = URL.createObjectURL(e.target.files[0]);
+                voicePreview.style.display = 'block';
+            }
+        });
+
+        // Generate from upload
+        document.getElementById('generateFromUpload').addEventListener('click', () => {
+            alert("In production, this would process your uploads and generate a video");
+        });
+
+        // Motion Capture System (from previous implementation)
+        const webcam = document.getElementById('webcam');
+        const capture = document.getElementById('capture');
+        const startBtn = document.getElementById('startBtn');
+        const recordBtn = document.getElementById('recordBtn');
+        const stopBtn = document.getElementById('stopBtn');
+        const avatarCanvas = document.getElementById('avatarCanvas');
+        const downloadBtn = document.getElementById('downloadBtn');
+        
+        let stream = null;
+        let isRecording = false;
+        let recordedFrames = [];
+        let animationId = null;
+        
+        // Initialize
+        avatarCanvas.width = 640;
+        avatarCanvas.height = 480;
+        
+        // Start Webcam
+        startBtn.addEventListener('click', async () => {
+            try {
+                stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+                webcam.srcObject = stream;
+                webcam.classList.remove('hidden');
+                startBtn.classList.add('hidden');
+                recordBtn.classList.remove('hidden');
+            } catch (err) {
+                console.error("Error accessing media devices:", err);
+                alert("Could not access camera/microphone. Please enable permissions.");
+            }
+        });
+        
+        // Record Movements
+        recordBtn.addEventListener('click', () => {
+            isRecording = true;
+            recordedFrames = [];
+            recordBtn.classList.add('hidden');
+            stopBtn.classList.remove('hidden');
+            captureFrame();
+        });
+        
+        // Capture Frames
+        function captureFrame() {
+            if (!isRecording) return;
+            
+            const ctx = capture.getContext('2d');
+            capture.width = webcam.videoWidth;
+            capture.height = webcam.videoHeight;
+            ctx.drawImage(webcam, 0, 0, capture.width, capture.height);
+            
+            recordedFrames.push({
+                image: capture.toDataURL('image/png'),
+                timestamp: Date.now()
+            });
+            
+            updateAvatarPreview();
+            requestAnimationFrame(captureFrame);
+        }
+        
+        // Update Avatar Preview
+        function updateAvatarPreview() {
+            const ctx = avatarCanvas.getContext('2d');
+            ctx.clearRect(0, 0, avatarCanvas.width, avatarCanvas.height);
+            
+            // Draw background
+            ctx.fillStyle = '#4cc9f0';
+            ctx.fillRect(0, 0, avatarCanvas.width, avatarCanvas.height);
+            
+            // Draw avatar
+            ctx.fillStyle = '#f72585';
+            ctx.beginPath();
+            ctx.arc(avatarCanvas.width/2, avatarCanvas.height/2, 100, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Animate mouth
+            const openness = 0.3 + 0.2 * Math.sin(Date.now() / 200);
+            ctx.fillStyle = 'white';
+            ctx.beginPath();
+            ctx.ellipse(
+                avatarCanvas.width/2, 
+                avatarCanvas.height/2 + 30, 
+                50, 
+                10 * openness, 
+                0, 0, Math.PI * 2
+            );
+            ctx.fill();
+        }
+        
+        // Stop Recording
+        stopBtn.addEventListener('click', () => {
+            isRecording = false;
+            stopBtn.classList.add('hidden');
+            document.getElementById('resultControls').classList.remove('hidden');
+            console.log("Recorded frames:", recordedFrames.length);
+            alert("Video generation complete! Ready to download.");
+        });
+        
+        // Download Video
+        downloadBtn.addEventListener('click', () => {
+            alert("In production, this would download your avatar video");
+        });
+        
+        // Load ads after page is ready
+        window.addEventListener('DOMContentLoaded', loadAds);
+    </script>
+</body>
+</html>

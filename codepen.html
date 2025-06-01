@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CodePen - AI Code Generator for 25+ Programming Languages</title>
+  <meta name="description" content="Free online code generator for Python, JavaScript, Java, C++, and 22 other languages. Get instant code snippets for your projects.">
+  <meta name="keywords" content="code generator, programming snippets, Python examples, JavaScript code, Java snippets, C++ examples, coding help">
+  <meta name="author" content="CodePen Tools">
+  <style>
+    :root {
+      --primary: #00C4CC;
+      --secondary: #FF5E5B;
+      --background: #F7F9FC;
+      --card: #FFFFFF;
+      --text: #2D3748;
+      --text-light: #718096;
+    }
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--background);
+      color: var(--text);
+      margin: 0;
+      padding: 0;
+      line-height: 1.6;
+    }
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+    header {
+      text-align: center;
+      margin-bottom: 2.5rem;
+    }
+    h1 {
+      color: var(--primary);
+      font-size: 2.5rem;
+      margin: 0;
+      font-weight: 700;
+    }
+    .tool-card {
+      background: var(--card);
+      border-radius: 1rem;
+      box-shadow: 0 10px 30px rgba(0, 196, 204, 0.1);
+      padding: 2rem;
+      margin-bottom: 2rem;
+    }
+    label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+    }
+    select, input {
+      width: 100%;
+      padding: 0.8rem;
+      margin-bottom: 1.5rem;
+      border: 2px solid #E2E8F0;
+      border-radius: 0.75rem;
+      font-size: 1rem;
+    }
+    button {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 1rem;
+      border-radius: 0.75rem;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      width: 100%;
+      margin-bottom: 1rem;
+      transition: background 0.3s;
+    }
+    button:hover {
+      background: #00a8b0;
+    }
+    button:disabled {
+      background: #cccccc;
+      cursor: not-allowed;
+    }
+    #codeOutput {
+      background: #F8FAFC;
+      border: 2px solid #E2E8F0;
+      border-radius: 0.75rem;
+      padding: 1.5rem;
+      min-height: 150px;
+      font-family: 'Fira Code', monospace;
+      white-space: pre-wrap;
+    }
+    .loading {
+      color: var(--text-light);
+      font-style: italic;
+    }
+  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Fira+Code&display=swap" rel="stylesheet">
+  <!-- MONETAG SMARTLINK HEADER -->
+  <div id="monetag-header"></div>
+</head>
+<body>
+  <div class="container">
+    <!-- MONETAG SMARTLINK TOP CONTENT -->
+    <div id="monetag-top-content"></div>
+
+    <header>
+      <h1>CodePen</h1>
+      <p>Generate code snippets in seconds</p>
+    </header>
+
+    <main>
+      <div class="tool-card">
+        <label for="codeType">Programming Language:</label>
+        <select id="codeType">
+          <option value="python">Python</option>
+          <option value="javascript">JavaScript</option>
+          <option value="java">Java</option>
+          <option value="csharp">C#</option>
+          <option value="cpp">C++</option>
+          <option value="c">C</option>
+          <option value="typescript">TypeScript</option>
+          <option value="go">Go</option>
+          <option value="rust">Rust</option>
+          <option value="swift">Swift</option>
+          <option value="r">R</option>
+          <option value="julia">Julia</option>
+          <option value="matlab">MATLAB</option>
+          <option value="kotlin">Kotlin</option>
+          <option value="dart">Dart</option>
+          <option value="php">PHP</option>
+          <option value="ruby">Ruby</option>
+          <option value="shell">Shell</option>
+          <option value="powershell">PowerShell</option>
+          <option value="sql">SQL</option>
+          <option value="perl">Perl</option>
+          <option value="scala">Scala</option>
+          <option value="haskell">Haskell</option>
+          <option value="elixir">Elixir</option>
+          <option value="lua">Lua</option>
+        </select>
+
+        <label for="snippetDesc">What do you need?</label>
+        <input type="text" id="snippetDesc" placeholder="e.g., 'Quick sort algorithm'">
+
+        <button id="generateBtn">Generate Code</button>
+        
+        <label>Generated Code:</label>
+        <pre id="codeOutput"><code>// Select language and describe what you need</code></pre>
+        
+        <button id="copyBtn">Copy to Clipboard</button>
+      </div>
+    </main>
+
+    <!-- MONETAG SMARTLINK BOTTOM CONTENT -->
+    <div id="monetag-bottom-content"></div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const generateBtn = document.getElementById('generateBtn');
+      const copyBtn = document.getElementById('copyBtn');
+      const codeOutput = document.getElementById('codeOutput');
+      const codeType = document.getElementById('codeType');
+      const snippetDesc = document.getElementById('snippetDesc');
+      
+      // Sample code templates for different languages
+      const codeTemplates = {
+        python: (desc) => `# Python code for: ${desc}\n\ndef main():\n    # Your implementation here\n    pass\n\nif __name__ == "__main__":\n    main()`,
+        javascript: (desc) => `// JavaScript code for: ${desc}\n\nfunction ${camelCase(desc)}() {\n  // Your implementation here\n}\n\n// Example usage\n${camelCase(desc)}();`,
+        java: (desc) => `// Java code for: ${desc}\n\npublic class Main {\n    public static void main(String[] args) {\n        // Your implementation here\n    }\n}`,
+        cpp: (desc) => `// C++ code for: ${desc}\n\n#include <iostream>\n\nint main() {\n    // Your implementation here\n    return 0;\n}`,
+        // Add more templates for other languages
+      };
+      
+      // Helper function to convert description to camelCase
+      function camelCase(str) {
+        return str.replace(/(?:^\w|[A-Z]|\b\w|\s+)/g, function(match, index) {
+          if (+match === 0) return "";
+          return index === 0 ? match.toLowerCase() : match.toUpperCase();
+        }).replace(/[^\w]/g, '');
+      }
+      
+      // Generate code using AI API (simulated here)
+      async function generateCode(language, description) {
+        if (!description) {
+          return "Please enter a description of what you need.";
+        }
+        
+        // Show loading state
+        codeOutput.innerHTML = '<code class="loading">Generating code... Please wait.</code>';
+        generateBtn.disabled = true;
+        generateBtn.textContent = 'Generating...';
+        
+        try {
+          // Simulate API call delay
+          await new Promise(resolve => setTimeout(resolve, 1500));
+          
+          // Check if we have a template for this language
+          if (codeTemplates[language]) {
+            return codeTemplates[language](description);
+          }
+          
+          // Default template for unsupported languages
+          return `// ${language} code for: ${description}\n\n// Your implementation goes here\n// This language is supported but we don't have a specific template yet.`;
+        } catch (error) {
+          console.error("Error generating code:", error);
+          return `// Error generating code. Please try again.\n// ${error.message}`;
+        } finally {
+          generateBtn.disabled = false;
+          generateBtn.textContent = 'Generate Code';
+        }
+      }
+      
+      // Generate button click handler
+      generateBtn.addEventListener('click', async function() {
+        const language = codeType.value;
+        const description = snippetDesc.value.trim();
+        
+        const code = await generateCode(language, description);
+        codeOutput.textContent = code;
+      });
+      
+      // Copy button click handler
+      copyBtn.addEventListener('click', function() {
+        const code = codeOutput.textContent;
+        navigator.clipboard.writeText(code).then(() => {
+          // Show temporary feedback
+          const originalText = copyBtn.textContent;
+          copyBtn.textContent = 'Copied!';
+          setTimeout(() => {
+            copyBtn.textContent = originalText;
+          }, 2000);
+        }).catch(err => {
+          console.error('Failed to copy:', err);
+          alert('Failed to copy code. Please try again.');
+        });
+      });
+      
+      // Allow pressing Enter in the input field to generate code
+      snippetDesc.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+          generateBtn.click();
+        }
+      });
+    });
+  </script>
+
+  <!-- MONETAG SMARTLINK SCRIPT -->
+  <script>
+    var monetagScript = document.createElement('script');
+    monetagScript.src = 'https://YOUR_MONETAG_SMARTLINK_URL.js';
+    document.body.appendChild(monetagScript);
+  </script>
+</body>
+</html>
